@@ -1,0 +1,380 @@
+echo "      Mini Project     "
+
+echo "          on     "
+
+echo " Student Database Management System "
+create ()
+
+{
+
+        echo "Enter the filename which you want to create"
+
+        read db
+
+        touch $db
+
+        echo "File created"
+
+}
+
+
+insert()
+
+{
+
+        if [ -z $db ];then
+
+                echo "Database doesnt exist. Create a new database."
+
+        else
+
+                echo "Enter the number of records to be added."
+
+                read no
+
+                while [ $no -gt 0 ]
+
+
+                do
+
+                        echo "Enter roll no: "
+
+                        read rno
+ srno=`grep "^$rno" "$db"`
+
+                        if [ -z $srno ]
+
+                        then
+
+                                echo "Enter Name: "
+
+
+                                read name
+                                echo enter $name marks in three subjects
+                                echo "Linux Programming: "
+
+                                read sub1
+
+                                echo "Operating System: "
+
+                                read sub2
+
+                                echo "Data structures: "
+
+                                read sub3
+
+                                avg=$((($sub1+$sub2+$sub3)/3))
+
+
+                                echo "Average : $avg"
+
+                                record=$rno":"$name":"$sub1":"$sub2":"$sub3":"$avg
+
+                                echo $record >> "$db"
+
+                                no=$(($no-1))
+
+                        else
+
+                                echo "Record already exists."
+
+                        fi
+
+
+                done
+
+        fi
+
+}
+
+search()
+
+{
+
+        echo " Enter roll no: "
+
+        read rno
+
+
+        record=`grep "^$rno" "$db"`
+
+        if [ $? -ne 0 ]; then
+
+                echo "Record doesnt exist. "
+
+        else
+
+                echo "Record found"
+
+                echo $record
+
+        fi
+
+
+}
+
+modify()
+
+{
+
+        echo " Enter roll no to modify: "
+
+        read rno
+  grep "^$rno" $db > temp1.txt
+
+        grep -v "^$rno" $db > temp2.txt
+
+
+        mv temp2.txt $db
+
+        if [ $? -ne 0 ]; then
+
+                echo "Record doesnt exist. "
+
+        else
+
+                name=`cut -d ";" -f2 "temp1.txt"`
+
+                sub1=`cut -d ";" -f3 "temp1.txt"`
+
+                sub2=`cut -d ";" -f4 "temp1.txt"`
+
+
+                sub3=`cut -d ";" -f5 "temp1.txt"`
+
+                echo "Enter the value you want to modify"
+
+                MENU=" Values
+
+                1)Name
+
+                2)Linux programmming
+
+                3)Operating System
+
+                4)Data Structures
+
+                5) Exit
+
+
+                "
+                while [ true ]
+                do
+                        echo "$MENU"
+
+                        echo "Enter your choice"
+   read n1
+
+                        case $n1 in
+
+                                1)
+
+                                        echo "Enter the new name"
+
+
+                                        read name
+
+                                        ;;
+
+                                2)
+
+                                        echo "Enter the new marks for Linux Programming:"
+
+                                        read sub1
+
+                                        ;;
+
+                                3)
+
+                                        echo "Enter the new marks for Operating System:"
+
+
+                                        read sub2
+
+                                        ;;
+
+                                4)
+
+                                        echo "Enter the new marks for Data Structures:"
+
+                                        read sub3
+      ;;
+
+                                *)
+
+
+                                        echo "Student record modified"
+
+                                        break
+
+                                        ;;
+
+                                esac
+
+                        done
+
+                        avg=$((($sub1+$sub2+$sub3)/3))
+
+                        record=$rno":"$name":"$sub1":"$sub2":"$sub3":"$avg
+
+                        echo $record >> "$db"
+
+                fi
+
+        }
+
+
+        delete()
+
+        {
+
+                echo " Enter roll no: "
+
+                read rno
+
+                record=`grep "^$rno" "$db"`
+
+                if [ $? -ne 0 ]; then
+
+
+                        echo "Record doesnt exist. "
+
+                else
+      echo "Record found"
+
+                        echo $record
+
+                        record=`grep -v "^$rno" "$db" > tmp.txt`
+
+                        mv tmp.txt $db
+
+                        echo "Record deleted."
+
+
+                fi
+
+        }
+
+        display()
+
+        {
+
+                echo " Complete database..."
+
+                sort -g $db
+
+        }
+        admin()
+        {
+
+                MENU1="***********Admin Menu***********\n
+
+                1)Create\n
+
+                2)Insert\n
+
+                3)Search\n
+
+                4)Modify\n
+
+                5)Delete\n
+
+                6)Display\n
+
+                7)Exit\n
+
+                "
+
+                while true
+
+                do
+
+                        echo $MENU1
+
+                        echo "Enter your choice: "
+
+                        read n
+
+
+                        case $n in
+
+                                1) create
+
+                                        ;;
+
+                                2)insert
+
+                                        ;;
+
+                                3) search
+
+                                        ;;
+
+
+                                4) modify
+
+                                        ;;
+
+                                5) delete
+
+                                        ;;
+
+                                6) display
+
+                                        ;;
+              7) exit
+
+                                        ;;
+
+
+                                esac
+
+                        done
+                }
+                student()
+                {
+                        create
+                        while true
+                        do
+                                echo "*******Student MENU*******"
+                                echo "1.search record\n2.view all records\n3.Exit"
+                                read n
+                                case $n in
+                                        1)
+                                                search
+                                                ;;
+                                        2)
+                                                display
+                                                ;;
+                                        3)
+                                                exit
+                                                ;;
+                                        *)
+                                                echo "Invalid choice"
+                                                ;;
+                                esac
+                        done
+                }
+
+                menu1="*******MAIN MENU******\n
+                1.Admin\n
+                2.student\n
+                3.Exit
+                "
+          while true
+                do
+                        echo $menu1
+                        echo Enter your choice:
+                        read n
+                        case $n in
+                                1)
+                                        admin
+                                        ;;
+                                2)
+                                        student
+                                        ;;
+                                3)
+                                        exit
+                                        ;;
+                        esac
+                done
